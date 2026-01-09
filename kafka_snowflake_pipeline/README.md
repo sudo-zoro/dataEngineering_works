@@ -6,6 +6,11 @@ Events are produced in real time, stored reliably in Kafka, and consumed by a Py
 
 ---
 
+## Sample Output
+
+![Python Output](doc/python_output.png)
+![Snowflake Output](doc/snowflake.png)
+
 ## Architecture
 
 ```
@@ -39,14 +44,42 @@ docker-compose up -d
 
 ### Create Kafka Topic
 ```bash
-docker exec -it kafka_snowflake_pipeline-kafka-1 kafka-topics \
-  --create --topic events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+docker exec -it kafka_snowflake_pipeline-kafka-1 kafka-topics   --create --topic events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 ```
 
 ### Install Python Dependencies
 ```bash
 pip install kafka-python snowflake-connector-python
 ```
+
+---
+
+## 🏗 Step 4: Create Warehouse, Database, and Table
+
+Run the following in your **Snowflake Worksheet**:
+
+```sql
+-- Warehouse
+CREATE WAREHOUSE IF NOT EXISTS compute_wh
+  WITH WAREHOUSE_SIZE = 'XSMALL'
+  AUTO_SUSPEND = 60
+  AUTO_RESUME = TRUE;
+
+-- Database & Schema
+CREATE DATABASE IF NOT EXISTS realtime_db;
+CREATE SCHEMA IF NOT EXISTS realtime_db.kafka;
+
+-- Table
+CREATE TABLE IF NOT EXISTS realtime_db.kafka.events (
+    event_id INT,
+    user_id INT,
+    event_type STRING,
+    amount FLOAT,
+    event_time TIMESTAMP
+);
+```
+
+---
 
 ### Run the Pipeline
 ```bash
