@@ -106,6 +106,3 @@ Kafka acts as a **reliable mediator** between systems:
 - Decouples producers from consumers  
 
 ---
-
-## Resume Summary
-**Built a real-time data pipeline using Apache Kafka, Python, and Snowflake to ingest streaming events, validate data, and enable near real-time analytics through a decoupled, fault-tolerant architecture.**
